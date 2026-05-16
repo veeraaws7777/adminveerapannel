@@ -1,1 +1,311 @@
-this is abinash page , the page will load soon 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills Dashboard</title>
+<link rel="icon" type="image/png" href="https://static.vecteezy.com/system/resources/thumbnails/045/720/728/small_2x/dark-cat-head-free-png.png">
+<style>
+:root {
+  --bg-dark: #0d0a1a;
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.13);
+  --glass-hover: rgba(255,255,255,0.11);
+  --card-bg: rgba(255,255,255,0.07);
+  --text-main: #f0eaff;
+  --text-muted: #b0a8cc;
+  --accent-purple: #7c5af8;
+  --active-pink: #f02d64;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; }
+body {
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  background: #0d0a1a;
+  color:var(--text-main);
+  min-height:100vh;
+  height:100vh;
+  width:100vw;
+  overflow:hidden;
+  position:relative;
+}
+
+/* Advanced moving animated dynamic background powered by canvas */
+#bg-anim-canvas {
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  width:100vw;
+  height:100vh;
+  display:block;
+  background:radial-gradient(ellipse at 20% 20%, #1a0d3a 0%, #0d0a1a 50%, #0a1020 100%);
+}
+
+/* Glass & cards etc stays above background animation */
+.app-container {
+  position:relative;
+  z-index:1;
+  display:flex;
+  height:100vh;
+  width:100vw;
+  overflow:hidden;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+/* CARDS SECTION */
+.cards-section {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  padding:40px 20px 30px;
+  gap:12px;
+  scrollbar-width:thin; scrollbar-color:rgba(124,90,248,0.4) transparent;
+  width:100%;
+  position:relative;
+}
+
+.cards-row {
+  display:flex; flex-direction:row;
+  justify-content:center; align-items:stretch;
+  gap:14px; width:100%; max-width:1100px;
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius:22px;
+  padding:30px 22px 28px;
+  flex:1; min-width:200px; max-width:340px;
+  text-align:center;
+  display:flex; flex-direction:column; align-items:center;
+  cursor:pointer;
+  transition: 
+    transform 0.25s cubic-bezier(.45,1.6,.7,1), 
+    box-shadow 0.25s, 
+    background 0.2s, 
+    border-color 0.2s;
+  position:relative; 
+  overflow:hidden;
+  box-shadow: 0 8px 30px rgba(30,16,54,.19);
+}
+.card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+}
+.card:hover {
+  transform:translateY(-14px) scale(1.036) rotate(-0.4deg);
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(124,90,248,0.6);
+  box-shadow: 0 32px 80px rgba(15,10,35,0.56), 0 0 0 2px rgba(124,90,248,0.32), inset 0 1px 0 rgba(255,255,255,0.17);
+}
+.card-img-box {
+  width:58px; height:58px;
+  background: rgba(255,255,255,0.08);
+  border-radius:16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:16px;
+  backdrop-filter: blur(4px);
+}
+.card-icon { width:40px; height:40px; object-fit:contain; border-radius:8px; }
+.card-title { font-size:16.5px; margin-bottom:10px; color:#f0eaff; font-weight:600; letter-spacing:.02em; }
+.card-desc { font-size:13.2px; color:var(--text-muted); line-height:1.6; }
+.card-desc b { color:#c8bcf5; font-weight:600; }
+
+/* Loading overlay */
+#loading-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(8,4,20,0.7);
+  backdrop-filter:blur(10px);
+  z-index:100; align-items:center; justify-content:center;
+}
+.lds-dual-ring::after {
+  content:" "; display:block;
+  width:38px; height:38px; border-radius:50%;
+  border:5px solid #a187fa;
+  border-color:#a187fa transparent #7c5af8 transparent;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg);} }
+</style>
+</head>
+<body>
+<canvas id="bg-anim-canvas"></canvas>
+<div class="app-container">
+
+  <!-- CARDS -->
+  <div class="cards-section" id="cards-section">
+    <div id="loading-overlay">
+      <div style="background:rgba(30,20,55,0.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:30px 55px;display:flex;flex-direction:column;align-items:center;">
+        <div class="lds-dual-ring"></div>
+        <span style="color:#fff;margin-top:18px;font-size:16px;">Loading...</span>
+      </div>
+    </div>
+
+    <div class="cards-row">
+      <div class="card" onclick="showLoadingThenRedirect('addaccount.html')">
+        <div class="card-img-box"><img src="https://cdn-icons-png.flaticon.com/512/1047/1047690.png" alt="Learning Path" class="card-icon" loading="lazy" style="transform:scale(1.35);"></div>
+        <h2 class="card-title"><center>Accounts: Add All Batches</center></h2>
+      </div>
+      <div class="card" onclick="showLoadingThenRedirect('')">
+        <div class="card-img-box"><img src="https://cdn-icons-png.freepik.com/256/12513/12513796.png?semt=ais_white_label" alt="Certification" class="card-icon" loading="lazy"></div>
+        <h2 class="card-title"><center>Students Task Monitor Center</center></h2>
+  
+      </div>
+      <div class="card" onclick="showLoadingThenRedirect('ai.html')">
+        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="AI Studio" class="card-icon" loading="lazy"></div>
+        <h2 class="card-title"><center>soon</center></h2>
+      </div>
+    </div>
+
+    <div class="cards-row">
+      <div class="card" onclick="showLoadingThenRedirect('gitlogin.html')">
+        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="GitHub" class="card-icon" loading="lazy" style="filter:invert(1);"></div>
+        <h2 class="card-title"><center>soon</center></h2>
+      </div>
+      <div class="card" onclick="showLoadingThenRedirect('test.html')">
+        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="Test" class="card-icon" loading="lazy"></div>
+        <h2 class="card-title"><center>soon</center></h2>
+      </div>
+      <div class="card" onclick="showLoadingThenRedirect('dailytask.html')">
+        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="Daily Task" class="card-icon" loading="lazy"></div>
+        <h2 class="card-title"><center>soon</center></h2>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showLoadingThenRedirect(url){
+  var o=document.getElementById('loading-overlay');
+  if(o) o.style.display='flex';
+  setTimeout(()=>{ window.location.href=url; }, 900);
+}
+
+// Animated BG using canvas: gradient orbs & particles
+(function(){
+  const canvas = document.getElementById('bg-anim-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height, dpr, orbs, particles;
+
+  function resizeCanvas(){
+    dpr = window.devicePixelRatio || 1;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr, dpr);
+  }
+
+  // Moving Orbs (big color glows)
+  function createOrbs(){
+    return [
+      {x:width*.3, y:height*.2, r:width*.28, clr:['#6046a8', '#7c5af899'], dx:0.11,dy:0.09,t:Math.random()*999 },
+      {x:width*.78, y:height*.66, r:width*.22, clr:['#f02d6482', '#fcd1e300'], dx:-.07,dy:-.042,t:Math.random()*999 },
+      {x:width*.12, y:height*.82, r:width*.15, clr:['#4a6ec880','#b0a8cc00'], dx:.09, dy:-.06, t:Math.random()*999}
+    ];
+  }
+  // Floating Particles (small lights)
+  function createParticles(){
+    const arr=[];
+    for(let i=0;i<32;i++){
+      arr.push({
+        x:Math.random()*width,
+        y:Math.random()*height,
+        r:1.4+2.2*Math.random(),
+        dx: (0.25+0.55*Math.random()) * (Math.random()<.5?1:-1),
+        dy: (0.21+0.5*Math.random()) * (Math.random()<.5?1:-1),
+        alpha: 0.25+0.55*Math.random(),
+        hue: 260+Math.random()*90,
+        sat: 45+Math.random()*45
+      });
+    }
+    return arr;
+  }
+
+  function drawOrbs(now){
+    for(const o of orbs){
+      // Move orbs gently
+      o.x += Math.sin(now/2600+o.t)*o.dx;
+      o.y += Math.cos(now/1800+o.t)*o.dy;
+
+      // Gradient
+      const g = ctx.createRadialGradient(o.x, o.y, o.r*0.18, o.x, o.y, o.r);
+      g.addColorStop(0, o.clr[0]);
+      g.addColorStop(1, o.clr[1]);
+      ctx.globalAlpha=.88;
+      ctx.beginPath();
+      ctx.arc(o.x, o.y, o.r, 0, Math.PI*2);
+      ctx.closePath();
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+
+  function drawParticles(){
+    for(const p of particles){
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.closePath();
+      ctx.fillStyle = `hsl(${p.hue},${p.sat}%,78%)`;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "#caadff";
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.globalAlpha=1;
+  }
+
+  function animate(now){
+    ctx.clearRect(0,0,width,height);
+    drawOrbs(now);
+    drawParticles();
+    // Animate particles
+    for(const p of particles){
+      p.x+=p.dx;
+      p.y+=p.dy;
+      if(p.x<-70) p.x=width+20;
+      if(p.x>width+70) p.x=-12;
+      if(p.y<-30) p.y=height+10;
+      if(p.y>height+30) p.y=-6;
+    }
+    requestAnimationFrame(animate);
+  }
+  function setup(){
+    resizeCanvas();
+    orbs = createOrbs();
+    particles = createParticles();
+    requestAnimationFrame(animate);
+  }
+  window.addEventListener('resize', setup, {passive:true});
+  setup();
+})();
+</script>
+
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window,document,"clarity","script","vv8bw0cwsp");
+</script>
+
+<!-- Cloudflare Pages Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"1f8eca71f7fe463db64dd9e906644736"}'></script>
+
+</body>
+</html>
