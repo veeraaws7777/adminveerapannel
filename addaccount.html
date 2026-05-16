@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0a0f1e;min-height:100vh;overflow-x:hidden}
+
+/* === ANIMATED BG === */
+.bg-root{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(135deg,#0a0f1e 0%,#0d1b2a 40%,#0a1628 100%)}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(29,158,117,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(29,158,117,.07) 1px,transparent 1px);background-size:40px 40px}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:float 8s ease-in-out infinite}
+.orb1{width:500px;height:500px;background:radial-gradient(circle,#1D9E75,transparent 70%);top:-120px;left:-100px;animation-delay:0s}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,#185FA5,transparent 70%);top:30%;right:-80px;animation-delay:3s}
+.orb3{width:300px;height:300px;background:radial-gradient(circle,#534AB7,transparent 70%);bottom:10%;left:20%;animation-delay:5s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+.scanline{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none}
+
+/* === LAYOUT === */
+.shell{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:2rem 1.5rem 3rem}
+
+/* === HEADER === */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+.header-left{display:flex;align-items:center;gap:14px}
+.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#1D9E75,#0F6E56);display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(29,158,117,.35)}
+.logo i{font-size:22px;color:#fff}
+.htitle{font-size:20px;font-weight:600;color:#f0faf6;letter-spacing:-.3px}
+.hsub{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
+.date-chip{font-size:11px;color:rgba(255,255,255,.5);padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);backdrop-filter:blur(8px)}
+
+/* === STATS === */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
+.stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.1rem 1.2rem;display:flex;align-items:center;gap:14px;backdrop-filter:blur(12px);transition:border-color .2s}
+.stat:hover{border-color:rgba(255,255,255,.15)}
+.stat-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.si-all{background:rgba(55,138,221,.15);border:1px solid rgba(55,138,221,.2)}
+.si-all i{color:#378ADD;font-size:18px}
+.si-on{background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.2)}
+.si-on i{color:#1D9E75;font-size:18px}
+.si-off{background:rgba(216,90,48,.15);border:1px solid rgba(216,90,48,.2)}
+.si-off i{color:#D85A30;font-size:18px}
+.stat-lbl{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:3px}
+.stat-val{font-size:24px;font-weight:600;color:#fff;line-height:1}
+
+/* === SECTION HEADER === */
+.sec-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.sec-lbl{font-size:11px;font-weight:600;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:6px}
+.sec-lbl i{font-size:14px}
+.cnt-pill{font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:3px 10px}
+
+/* === BATCH GRID === */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;transition:border-color .2s,transform .2s,box-shadow .2s;cursor:default}
+.card:hover{border-color:rgba(255,255,255,.18);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.card-stripe{height:3px;width:100%}
+.card-stripe.online{background:linear-gradient(90deg,#1D9E75,#5DCAA5)}
+.card-stripe.offline{background:linear-gradient(90deg,#D85A30,#F0997B)}
+.card-body{padding:.9rem 1rem}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
+.card-time{font-size:14px;font-weight:600;color:#fff;display:flex;align-items:center;gap:6px}
+.card-time i{font-size:13px;color:rgba(255,255,255,.35)}
+.badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;text-transform:uppercase;letter-spacing:.04em}
+.badge.online{background:rgba(29,158,117,.2);color:#5DCAA5;border:1px solid rgba(29,158,117,.25)}
+.badge.offline{background:rgba(216,90,48,.2);color:#F0997B;border:1px solid rgba(216,90,48,.25)}
+.dot{width:5px;height:5px;border-radius:50%}
+.dot.online{background:#1D9E75}
+.dot.offline{background:#D85A30}
+
+.open-btn{width:100%;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);cursor:pointer;transition:border-color .15s,background .15s;text-align:left}
+.open-btn:hover{border-color:rgba(29,158,117,.4);background:rgba(29,158,117,.06)}
+.open-btn i.gl{font-size:14px;color:rgba(255,255,255,.4);flex-shrink:0}
+.btn-text{flex:1;min-width:0}
+.btn-domain{font-size:11px;font-weight:500;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn-path{font-size:10px;color:rgba(255,255,255,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.open-btn i.arr{font-size:13px;color:rgba(255,255,255,.25);flex-shrink:0}
+
+.card-foot{display:flex;justify-content:flex-end;padding:.5rem 1rem .7rem}
+.rm{background:none;border:none;cursor:pointer;font-size:11px;color:rgba(255,255,255,.25);display:flex;align-items:center;gap:3px;padding:3px 7px;border-radius:8px;transition:color .15s,background .15s}
+.rm:hover{color:#F0997B;background:rgba(216,90,48,.12)}
+
+/* === ADD BUTTON === */
+.add-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:.8rem;font-size:13px;font-weight:500;border:1px dashed rgba(29,158,117,.35);background:rgba(29,158,117,.04);border-radius:14px;cursor:pointer;color:rgba(29,158,117,.7);transition:all .2s}
+.add-btn:hover{border-color:rgba(29,158,117,.6);background:rgba(29,158,117,.09);color:#1D9E75}
+.add-btn i{font-size:17px}
+
+/* === VIEWER === */
+.viewer{display:none;flex-direction:column;margin-top:1.5rem;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;backdrop-filter:blur(12px)}
+.viewer.open{display:flex}
+.vbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.08)}
+.vdots{display:flex;gap:5px}
+.vd{width:9px;height:9px;border-radius:50%}
+.vd1{background:#FF5F57}
+.vd2{background:#FFBD2E}
+.vd3{background:#28CA41}
+.vbar-label{font-size:12px;font-weight:500;color:rgba(255,255,255,.6);flex:1}
+.vbar-url{font-size:11px;color:rgba(255,255,255,.3);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vclose{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);cursor:pointer;font-size:12px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:4px;padding:4px 12px;border-radius:8px;transition:all .15s}
+.vclose:hover{background:rgba(216,90,48,.15);color:#F0997B;border-color:rgba(216,90,48,.25)}
+iframe{width:100%;height:560px;border:none;display:block;background:#fff}
+
+/* === MODAL === */
+.modal-bg{display:none;min-height:420px;align-items:center;justify-content:center;margin-top:1.5rem;border-radius:16px;background:rgba(0,0,0,.5);backdrop-filter:blur(6px)}
+.modal-bg.open{display:flex}
+.modal{background:#0f1c2e;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:1.75rem;width:340px;max-width:96%}
+.mhead{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+.micon{width:36px;height:36px;border-radius:10px;background:rgba(29,158,117,.2);border:1px solid rgba(29,158,117,.25);display:flex;align-items:center;justify-content:center}
+.micon i{font-size:17px;color:#1D9E75}
+.mtitle{font-size:15px;font-weight:600;color:#fff}
+.fg{margin-bottom:.8rem}
+.fg label{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,.4);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.fg input,.fg select{width:100%;font-size:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 12px;color:#fff;outline:none;transition:border-color .15s;font-family:inherit}
+.fg input::placeholder{color:rgba(255,255,255,.2)}
+.fg input:focus,.fg select:focus{border-color:rgba(29,158,117,.5);background:rgba(29,158,117,.05)}
+.fg select option{background:#0f1c2e;color:#fff}
+.hint{font-size:11px;color:rgba(29,158,117,.6);margin-top:4px;font-family:monospace}
+.mdiv{height:1px;background:rgba(255,255,255,.07);margin:1rem 0}
+.mact{display:flex;gap:8px;justify-content:flex-end}
+.btn-p{background:linear-gradient(135deg,#1D9E75,#0F6E56);color:#fff;border:none;padding:9px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:5px}
+.btn-p:hover{opacity:.88}
+.btn-c{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);padding:9px 16px;border-radius:10px;font-size:13px;cursor:pointer;color:rgba(255,255,255,.5);transition:background .15s}
+.btn-c:hover{background:rgba(255,255,255,.09)}
+</style>
+</head>
+<body>
+<div class="bg-root">
+  <div class="bg-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="scanline"></div>
+</div>
+
+<div class="shell">
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Batch admin panel — manage and open batch portals</h2>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></div>
+    <div>
+      <div class="htitle">Batch Admin Panel</div>
+      <div class="hsub">Manage all your batch portals</div>
+    </div>
+  </div>
+  <div class="date-chip" id="dateLbl"></div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-icon si-all"><i class="ti ti-stack" aria-hidden="true"></i></div>
+    <div><div class="stat-lbl">Total batches</div><div class="stat-val" id="s-total">0</div></div>
+  </div>
+  <div class="stat">
+    <div class="stat-icon si-on"><i class="ti ti-wifi" aria-hidden="true"></i></div>
+    <div><div class="stat-lbl">Online</div><div class="stat-val" id="s-online" style="color:#1D9E75">0</div></div>
+  </div>
+  <div class="stat">
+    <div class="stat-icon si-off"><i class="ti ti-building" aria-hidden="true"></i></div>
+    <div><div class="stat-lbl">Offline</div><div class="stat-val" id="s-offline" style="color:#D85A30">0</div></div>
+  </div>
+</div>
+
+<div class="sec-row">
+  <div class="sec-lbl"><i class="ti ti-books" aria-hidden="true"></i>All batches</div>
+  <span class="cnt-pill" id="cnt-pill">0 batches</span>
+</div>
+
+<div class="grid" id="grid"></div>
+<button class="add-btn" onclick="openModal()"><i class="ti ti-plus" aria-hidden="true"></i> Add new batch</button>
+
+<div class="viewer" id="viewer">
+  <div class="vbar">
+    <div class="vdots"><div class="vd vd1"></div><div class="vd vd2"></div><div class="vd vd3"></div></div>
+    <span class="vbar-label" id="vlabel"></span>
+    <span class="vbar-url" id="vurl"></span>
+    <button class="vclose" onclick="closeViewer()"><i class="ti ti-x" aria-hidden="true" style="font-size:12px"></i> Close</button>
+  </div>
+  <iframe id="vframe" src=""></iframe>
+</div>
+
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div class="mhead">
+      <div class="micon"><i class="ti ti-plus" aria-hidden="true"></i></div>
+      <div class="mtitle">Add new batch</div>
+    </div>
+    <div class="fg"><label>Batch time</label><input id="m-time" placeholder="e.g. 11:00 am"></div>
+    <div class="fg">
+      <label>Mode</label>
+      <select id="m-mode"><option value="offline">Offline</option><option value="online">Online</option></select>
+    </div>
+    <div class="fg">
+      <label>HTML page name</label>
+      <input id="m-page" placeholder="e.g. 73offline.html">
+      <div class="hint">adminvcloud.pages.dev/<span id="hint-page">yourpage.html</span></div>
+    </div>
+    <div class="mdiv"></div>
+    <div class="mact">
+      <button class="btn-c" onclick="closeModal()">Cancel</button>
+      <button class="btn-p" onclick="addBatch()"><i class="ti ti-check" aria-hidden="true" style="font-size:13px"></i> Add batch</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const BASE="https://adminvcloud.pages.dev/";
+let batches=[
+  {time:"7:30 am",mode:"offline",page:"73offline.html"},
+  {time:"9:00 am",mode:"offline",page:"900offline.html"},
+  {time:"10:30 am",mode:"offline",page:"1030offline.html"},
+  {time:"7:30 am",mode:"online",page:"73online.html"},
+  {time:"9:00 am",mode:"online",page:"900nline.html"},
+  {time:"10:30 am",mode:"online",page:"1030online.html"},
+];
+
+const d=new Date();
+document.getElementById('dateLbl').textContent=d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+document.getElementById('m-page').addEventListener('input',function(){
+  document.getElementById('hint-page').textContent=this.value||'yourpage.html';
+});
+
+function stats(){
+  const on=batches.filter(b=>b.mode==='online').length;
+  const off=batches.filter(b=>b.mode==='offline').length;
+  document.getElementById('s-total').textContent=batches.length;
+  document.getElementById('s-online').textContent=on;
+  document.getElementById('s-offline').textContent=off;
+  document.getElementById('cnt-pill').textContent=batches.length+' batch'+(batches.length!==1?'es':'');
+}
+
+function openViewer(url,label){
+  document.getElementById('vlabel').textContent=label;
+  document.getElementById('vurl').textContent=url;
+  document.getElementById('vframe').src=url;
+  const v=document.getElementById('viewer');
+  v.classList.add('open');
+  setTimeout(()=>v.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function closeViewer(){
+  document.getElementById('viewer').classList.remove('open');
+  document.getElementById('vframe').src='';
+}
+
+function openInNewTab(url) {
+  window.open(url, '_blank');
+}
+
+function render(){
+  const g=document.getElementById('grid');
+  g.innerHTML='';
+  batches.forEach((b,i)=>{
+    const url=BASE+b.page;
+    const label=b.time+' · '+b.mode;
+    const c=document.createElement('div');
+    c.className='card';
+    c.innerHTML=`
+      <div class="card-stripe ${b.mode}"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="card-time"><i class="ti ti-clock" aria-hidden="true"></i>${b.time}</span>
+          <span class="badge ${b.mode}"><span class="dot ${b.mode}"></span>${b.mode}</span>
+        </div>
+        <button class="open-btn" onclick="openInNewTab('${url}')">
+          <i class="ti ti-world gl" aria-hidden="true"></i>
+          <span class="btn-text">
+            <span class="btn-domain">adminvcloud.pages.dev</span>
+            <span class="btn-path">/${b.page}</span>
+          </span>
+          <i class="ti ti-arrow-right arr" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="card-foot">
+        <button class="rm" onclick="remove(${i})"><i class="ti ti-trash" aria-hidden="true" style="font-size:12px"></i> remove</button>
+      </div>`;
+    g.appendChild(c);
+  });
+  stats();
+}
+
+function openModal(){document.getElementById('modal-bg').classList.add('open');}
+function closeModal(){
+  document.getElementById('modal-bg').classList.remove('open');
+  ['m-time','m-page'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('hint-page').textContent='yourpage.html';
+}
+function addBatch(){
+  const time=document.getElementById('m-time').value.trim();
+  const mode=document.getElementById('m-mode').value;
+  const page=document.getElementById('m-page').value.trim();
+  if(!time||!page){alert('Please fill all fields.');return;}
+  batches.push({time,mode,page});
+  closeModal();render();
+}
+function remove(i){
+  if(confirm('Remove "'+batches[i].time+' ('+batches[i].mode+')"?')){batches.splice(i,1);render();}
+}
+render();
+</script>
+</body>
+</html>
