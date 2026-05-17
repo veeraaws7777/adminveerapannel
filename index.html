@@ -3,310 +3,529 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Pannel for All Things</title>
+<title>Admin Panel for All Things</title>
 <link rel="icon" type="image/png" href="https://static.vecteezy.com/system/resources/thumbnails/045/720/728/small_2x/dark-cat-head-free-png.png">
 <style>
 :root {
-  --bg-dark: #0d0a1a;
-  --glass-bg: rgba(255,255,255,0.06);
-  --glass-border: rgba(255,255,255,0.13);
-  --glass-hover: rgba(255,255,255,0.11);
-  --card-bg: rgba(255,255,255,0.07);
-  --text-main: #f0eaff;
-  --text-muted: #b0a8cc;
-  --accent-purple: #7c5af8;
-  --active-pink: #f02d64;
+  --bg: #0a0a0a;
+  --surface-1: rgba(255,255,255,0.04);
+  --surface-2: rgba(255,255,255,0.07);
+  --surface-3: rgba(255,255,255,0.11);
+  --border-subtle: rgba(255,255,255,0.08);
+  --border-mid: rgba(255,255,255,0.14);
+  --border-strong: rgba(255,255,255,0.22);
+  --text-primary: #f5f5f5;
+  --text-secondary: #999;
+  --text-muted: #555;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-html,body { height:100%; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
 body {
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  background: #0d0a1a;
-  color:var(--text-main);
-  min-height:100vh;
-  height:100vh;
-  width:100vw;
-  overflow:hidden;
-  position:relative;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }
 
-/* Advanced moving animated dynamic background powered by canvas */
-#bg-anim-canvas {
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  width:100vw;
-  height:100vh;
-  display:block;
-  background:radial-gradient(ellipse at 20% 20%, #1a0d3a 0%, #0d0a1a 50%, #0a1020 100%);
+/* ANIMATED BACKGROUND CANVAS */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
 }
 
-/* Glass & cards etc stays above background animation */
-.app-container {
-  position:relative;
-  z-index:1;
-  display:flex;
-  height:100vh;
-  width:100vw;
-  overflow:hidden;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+/* MAIN SHELL */
+.shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-/* TITLE STYLES */
-.admin-title {
-  font-size:2.3rem;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: .02em;
-  margin-bottom: 26px;
-  margin-top: 50px;
-  text-align: center;
-  text-shadow: 0 2px 22px rgba(124,90,248,0.10);
+/* TOP NAV BAR */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(10,10,10,0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  flex-shrink: 0;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--surface-3); border: 1px solid var(--border-mid);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.topbar-name { font-size: 14px; font-weight: 600; letter-spacing: .03em; color: var(--text-primary); }
+.topbar-badge {
+  font-size: 10px; padding: 2px 8px; border-radius: 99px;
+  background: rgba(255,255,255,0.08); border: 1px solid var(--border-subtle);
+  color: var(--text-secondary); letter-spacing: .06em; text-transform: uppercase;
+}
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.topbar-btn {
+  padding: 7px 16px; border-radius: 8px; font-size: 12px;
+  background: transparent; border: 1px solid var(--border-mid);
+  color: var(--text-secondary); cursor: pointer;
+  transition: all .15s ease; letter-spacing: .02em;
+}
+.topbar-btn:hover { background: var(--surface-2); color: var(--text-primary); border-color: var(--border-strong); }
+.topbar-avatar {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--surface-3); border: 1px solid var(--border-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: var(--text-secondary); cursor: pointer;
 }
 
-/* CARDS SECTION */
-.cards-section {
-  flex:1; overflow-y:auto; overflow-x:hidden;
-  display:flex; flex-direction:column;
-  justify-content:center; align-items:center;
-  padding:40px 20px 30px;
-  gap:12px;
-  scrollbar-width:thin; scrollbar-color:rgba(124,90,248,0.4) transparent;
-  width:100%;
-  position:relative;
+/* MAIN LAYOUT */
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  border-right: 1px solid var(--border-subtle);
+  background: rgba(10,10,10,0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 24px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+  overflow-y: auto;
+}
+.sidebar-section {
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-muted); padding: 8px 12px 4px; margin-top: 8px;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  font-size: 13px; color: var(--text-secondary);
+  cursor: pointer; transition: all .15s ease;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.sidebar-item:hover { background: var(--surface-2); color: var(--text-primary); border-color: var(--border-subtle); }
+.sidebar-item.active { background: var(--surface-3); color: var(--text-primary); border-color: var(--border-mid); }
+.sidebar-icon { font-size: 15px; opacity: .7; flex-shrink: 0; }
+.sidebar-count {
+  margin-left: auto; font-size: 10px;
+  background: var(--surface-2); border: 1px solid var(--border-subtle);
+  border-radius: 99px; padding: 1px 7px; color: var(--text-muted);
 }
 
-.cards-row {
-  display:flex; flex-direction:row;
-  justify-content:center; align-items:stretch;
-  gap:14px; width:100%; max-width:1100px;
+/* CONTENT AREA */
+.content {
+  flex: 1; overflow-y: auto; padding: 36px 40px;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
 
-.card {
-  background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius:22px;
-  padding:30px 22px 28px;
-  flex:1; min-width:200px; max-width:340px;
-  text-align:center;
-  display:flex; flex-direction:column; align-items:center;
-  cursor:pointer;
-  transition: 
-    transform 0.25s cubic-bezier(.45,1.6,.7,1), 
-    box-shadow 0.25s, 
-    background 0.2s, 
-    border-color 0.2s;
-  position:relative; 
-  overflow:hidden;
-  box-shadow: 0 8px 30px rgba(30,16,54,.19);
-}
-.card::before {
-  content:'';
-  position:absolute; top:0; left:0; right:0; height:1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-}
-.card:hover {
-  transform:translateY(-14px) scale(1.036) rotate(-0.4deg);
-  background: rgba(255,255,255,0.14);
-  border-color: rgba(124,90,248,0.6);
-  box-shadow: 0 32px 80px rgba(15,10,35,0.56), 0 0 0 2px rgba(124,90,248,0.32), inset 0 1px 0 rgba(255,255,255,0.17);
-}
-.card-img-box {
-  width:58px; height:58px;
-  background: rgba(255,255,255,0.08);
-  border-radius:16px;
-  border: 1px solid rgba(255,255,255,0.12);
-  display:flex; align-items:center; justify-content:center;
-  margin-bottom:16px;
-  backdrop-filter: blur(4px);
-}
-.card-icon { width:40px; height:40px; object-fit:contain; border-radius:8px; }
-.card-title { font-size:16.5px; margin-bottom:10px; color:#f0eaff; font-weight:600; letter-spacing:.02em; }
-.card-desc { font-size:13.2px; color:var(--text-muted); line-height:1.6; }
-.card-desc b { color:#c8bcf5; font-weight:600; }
+/* CONTENT HEADER */
+.content-header { margin-bottom: 32px; }
+.content-title { font-size: 24px; font-weight: 700; letter-spacing: -.01em; color: var(--text-primary); }
+.content-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
 
-/* Loading overlay */
-#loading-overlay {
-  display:none; position:fixed; inset:0;
-  background:rgba(8,4,20,0.7);
-  backdrop-filter:blur(10px);
-  z-index:100; align-items:center; justify-content:center;
+/* STAT STRIP */
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 32px; }
+.stat-card {
+  background: var(--surface-1); border: 1px solid var(--border-subtle);
+  border-radius: 12px; padding: 18px 20px;
+  transition: all .2s ease; position: relative; overflow: hidden;
 }
-.lds-dual-ring::after {
-  content:" "; display:block;
-  width:38px; height:38px; border-radius:50%;
-  border:5px solid #a187fa;
-  border-color:#a187fa transparent #7c5af8 transparent;
-  animation:spin 1s linear infinite;
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
 }
-@keyframes spin { to{transform:rotate(360deg);} }
+.stat-card:hover { background: var(--surface-2); border-color: var(--border-mid); }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+.stat-value { font-size: 22px; font-weight: 700; color: var(--text-primary); letter-spacing: -.02em; }
+.stat-delta { font-size: 11px; color: #666; margin-top: 6px; }
+.stat-delta.up { color: #4d9e4d; }
+.stat-delta.down { color: #9e4d4d; }
+
+/* SECTION LABEL */
+.section-label {
+  font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+
+/* CARDS GRID */
+.cards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 32px; }
+
+.panel-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px; padding: 28px 24px;
+  cursor: pointer;
+  transition: transform .25s cubic-bezier(.4,1.6,.6,1), background .2s, border-color .2s, box-shadow .25s;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  min-height: 160px;
+}
+.panel-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.09), transparent);
+  transition: opacity .2s;
+}
+.panel-card::after {
+  content: ''; position: absolute; inset: 0; border-radius: 16px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0);
+  transition: box-shadow .25s;
+}
+.panel-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+.panel-card:hover::after { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+.panel-card:active { transform: translateY(-3px) scale(1.01); }
+
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.card-icon-wrap {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--surface-2); border: 1px solid var(--border-mid);
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+}
+.card-arrow {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: transparent; border: 1px solid var(--border-subtle);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--text-muted);
+  transition: all .2s ease;
+}
+.panel-card:hover .card-arrow { background: var(--surface-2); border-color: var(--border-mid); color: var(--text-primary); }
+.card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; line-height: 1.3; }
+.card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.card-tag {
+  display: inline-block; margin-top: 12px; font-size: 10px;
+  padding: 3px 9px; border-radius: 99px;
+  background: var(--surface-2); border: 1px solid var(--border-subtle);
+  color: var(--text-muted); letter-spacing: .05em; text-transform: uppercase;
+}
+.card-tag.active-tag { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); color: #999; }
+.card-tag.soon-tag { background: rgba(255,255,255,0.03); border-color: var(--border-subtle); color: var(--text-muted); }
+
+/* COMING SOON CARDS */
+.panel-card.soon { opacity: .5; cursor: default; }
+.panel-card.soon:hover { transform: none; box-shadow: none; background: var(--surface-1); border-color: var(--border-subtle); }
+
+/* ACTIVITY TABLE */
+.activity-table { width: 100%; border-collapse: collapse; }
+.activity-table th {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-muted); padding: 8px 16px; text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.activity-table td {
+  font-size: 13px; color: var(--text-secondary);
+  padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: background .15s;
+}
+.activity-table tr:hover td { background: var(--surface-1); }
+.activity-table td:first-child { color: var(--text-primary); }
+.status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 7px; background: #555; }
+.status-dot.green { background: #3d7a3d; }
+.status-dot.gray  { background: #444; }
+.status-dot.amber { background: #6b5a1e; }
+
+/* LOADING OVERLAY */
+#loading {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.8); backdrop-filter: blur(12px);
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px;
+}
+.spinner {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: rgba(255,255,255,0.6);
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-text { font-size: 13px; color: var(--text-secondary); letter-spacing: .04em; }
 </style>
 </head>
 <body>
-<canvas id="bg-anim-canvas"></canvas>
-<div class="app-container">
 
-  <!-- ADMIN PANEL TITLE -->
-  <div class="admin-title">Admin Pannel for All Things</div>
+<canvas id="bg-canvas"></canvas>
 
-  <!-- CARDS -->
-  <div class="cards-section" id="cards-section">
-    <div id="loading-overlay">
-      <div style="background:rgba(30,20,55,0.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:30px 55px;display:flex;flex-direction:column;align-items:center;">
-        <div class="lds-dual-ring"></div>
-        <span style="color:#fff;margin-top:18px;font-size:16px;">Loading...</span>
-      </div>
+<!-- LOADING OVERLAY -->
+<div id="loading">
+  <div class="spinner"></div>
+  <span class="load-text">Navigating...</span>
+</div>
+
+<div class="shell">
+
+  <!-- TOP NAV BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">🐱</div>
+      <span class="topbar-name">Admin Panel</span>
+      <span class="topbar-badge">v2.0</span>
     </div>
-
-    <div class="cards-row">
-      <div class="card" onclick="showLoadingThenRedirect('addaccount.html')">
-        <div class="card-img-box"><img src="https://cdn-icons-png.flaticon.com/512/1047/1047690.png" alt="Learning Path" class="card-icon" loading="lazy" style="transform:scale(1.35);"></div>
-        <h2 class="card-title"><center>Accounts: Add All Batches</center></h2>
-      </div>
-      <div class="card" onclick="showLoadingThenRedirect('abi.html')">
-        <div class="card-img-box"><img src="https://cdn-icons-png.freepik.com/256/12513/12513796.png?semt=ais_white_label" alt="Certification" class="card-icon" loading="lazy"></div>
-        <h2 class="card-title"><center>Students Task Monitor Center</center></h2>
-  
-      </div>
-      <div class="card" onclick="showLoadingThenRedirect('ai.html')">
-        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="AI Studio" class="card-icon" loading="lazy"></div>
-        <h2 class="card-title"><center>soon</center></h2>
-      </div>
-    </div>
-
-    <div class="cards-row">
-      <div class="card" onclick="showLoadingThenRedirect('gitlogin.html')">
-        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="GitHub" class="card-icon" loading="lazy" style="filter:invert(1);"></div>
-        <h2 class="card-title"><center>soon</center></h2>
-      </div>
-      <div class="card" onclick="showLoadingThenRedirect('test.html')">
-        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="Test" class="card-icon" loading="lazy"></div>
-        <h2 class="card-title"><center>soon</center></h2>
-      </div>
-      <div class="card" onclick="showLoadingThenRedirect('dailytask.html')">
-        <div class="card-img-box"><img src="https://t3.ftcdn.net/jpg/03/15/92/94/360_F_315929483_O3zCF74h869pep9L2WMi6cWS2bhO2AjH.jpg" alt="Daily Task" class="card-icon" loading="lazy"></div>
-        <h2 class="card-title"><center>soon</center></h2>
-      </div>
+    <div class="topbar-right">
+      <button class="topbar-btn">Docs</button>
+      <button class="topbar-btn">Settings</button>
+      <div class="topbar-avatar">AD</div>
     </div>
   </div>
 
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">Overview</div>
+      <div class="sidebar-item active">
+        <span class="sidebar-icon">⊞</span> Dashboard
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">◎</span> Analytics
+        <span class="sidebar-count">new</span>
+      </div>
+
+      <div class="sidebar-section">Management</div>
+      <div class="sidebar-item" onclick="go('addaccount.html')">
+        <span class="sidebar-icon">＋</span> Add Accounts
+      </div>
+      <div class="sidebar-item" onclick="go('abi.html')">
+        <span class="sidebar-icon">◈</span> Task Monitor
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">⊙</span> Reports
+        <span class="sidebar-count">soon</span>
+      </div>
+
+      <div class="sidebar-section">System</div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">⚙</span> Settings
+      </div>
+      <div class="sidebar-item">
+        <span class="sidebar-icon">?</span> Help
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+
+      <div class="content-header">
+        <div class="content-title">Admin Dashboard</div>
+        <div class="content-subtitle">Manage accounts, monitor tasks, and track system activity.</div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Accounts</div>
+          <div class="stat-value">—</div>
+          <div class="stat-delta">All batches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Students</div>
+          <div class="stat-value">—</div>
+          <div class="stat-delta">Monitored</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tasks Today</div>
+          <div class="stat-value">—</div>
+          <div class="stat-delta">Pending review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">System Status</div>
+          <div class="stat-value" style="font-size:14px;display:flex;align-items:center;gap:8px;margin-top:4px;">
+            <span class="status-dot green" style="width:8px;height:8px;"></span>Online
+          </div>
+          <div class="stat-delta">All services up</div>
+        </div>
+      </div>
+
+      <!-- MODULE CARDS -->
+      <div class="section-label">Modules</div>
+      <div class="cards-grid">
+
+        <div class="panel-card" onclick="go('addaccount.html')">
+          <div class="card-top">
+            <div class="card-icon-wrap">👥</div>
+            <div class="card-arrow">↗</div>
+          </div>
+          <div class="card-title">Accounts: Add All Batches</div>
+          <div class="card-desc">Create and manage student accounts across multiple batches at once.</div>
+          <span class="card-tag active-tag">Active</span>
+        </div>
+
+        <div class="panel-card" onclick="go('abi.html')">
+          <div class="card-top">
+            <div class="card-icon-wrap">📊</div>
+            <div class="card-arrow">↗</div>
+          </div>
+          <div class="card-title">Students Task Monitor Center</div>
+          <div class="card-desc">Track student progress, tasks, and submission statuses in real time.</div>
+          <span class="card-tag active-tag">Active</span>
+        </div>
+
+        <div class="panel-card soon">
+          <div class="card-top">
+            <div class="card-icon-wrap" style="opacity:.4;">🤖</div>
+            <div class="card-arrow" style="opacity:.3;">↗</div>
+          </div>
+          <div class="card-title" style="color:var(--text-muted);">AI Studio</div>
+          <div class="card-desc" style="color:#3a3a3a;">AI-powered tools and automation features for admins.</div>
+          <span class="card-tag soon-tag">Coming soon</span>
+        </div>
+
+        <div class="panel-card soon">
+          <div class="card-top">
+            <div class="card-icon-wrap" style="opacity:.4;">⑂</div>
+            <div class="card-arrow" style="opacity:.3;">↗</div>
+          </div>
+          <div class="card-title" style="color:var(--text-muted);">GitHub Integration</div>
+          <div class="card-desc" style="color:#3a3a3a;">Connect repos, track commits and pull requests per student.</div>
+          <span class="card-tag soon-tag">Coming soon</span>
+        </div>
+
+        <div class="panel-card soon">
+          <div class="card-top">
+            <div class="card-icon-wrap" style="opacity:.4;">✎</div>
+            <div class="card-arrow" style="opacity:.3;">↗</div>
+          </div>
+          <div class="card-title" style="color:var(--text-muted);">Test Manager</div>
+          <div class="card-desc" style="color:#3a3a3a;">Create, schedule, and evaluate assessments and quizzes.</div>
+          <span class="card-tag soon-tag">Coming soon</span>
+        </div>
+
+        <div class="panel-card soon">
+          <div class="card-top">
+            <div class="card-icon-wrap" style="opacity:.4;">📅</div>
+            <div class="card-arrow" style="opacity:.3;">↗</div>
+          </div>
+          <div class="card-title" style="color:var(--text-muted);">Daily Task Planner</div>
+          <div class="card-desc" style="color:#3a3a3a;">Assign and schedule daily tasks and track completion rates.</div>
+          <span class="card-tag soon-tag">Coming soon</span>
+        </div>
+
+      </div>
+
+      <!-- ACTIVITY LOG -->
+      <div class="section-label" style="margin-top:8px;">Recent activity</div>
+      <table class="activity-table">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Module</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Admin session started</td>
+            <td>System</td>
+            <td>just now</td>
+            <td><span class="status-dot green"></span>Active</td>
+          </tr>
+          <tr>
+            <td>Batch accounts loaded</td>
+            <td>Accounts</td>
+            <td>2 min ago</td>
+            <td><span class="status-dot green"></span>Done</td>
+          </tr>
+          <tr>
+            <td>Task monitor refreshed</td>
+            <td>Task Monitor</td>
+            <td>5 min ago</td>
+            <td><span class="status-dot green"></span>Done</td>
+          </tr>
+          <tr>
+            <td>AI Studio</td>
+            <td>AI Studio</td>
+            <td>—</td>
+            <td><span class="status-dot amber"></span>Pending</td>
+          </tr>
+          <tr>
+            <td>GitHub integration</td>
+            <td>GitHub</td>
+            <td>—</td>
+            <td><span class="status-dot gray"></span>Queued</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
 </div>
 
 <script>
-function showLoadingThenRedirect(url){
-  var o=document.getElementById('loading-overlay');
-  if(o) o.style.display='flex';
-  setTimeout(()=>{ window.location.href=url; }, 900);
+function go(url) {
+  document.getElementById('loading').style.display = 'flex';
+  setTimeout(() => { window.location.href = url; }, 900);
 }
 
-// Animated BG using canvas: gradient orbs & particles
-(function(){
-  const canvas = document.getElementById('bg-anim-canvas');
-  const ctx = canvas.getContext('2d');
-  let width, height, dpr, orbs, particles;
+// Animated background: subtle white light orbs
+(function () {
+  const c = document.getElementById('bg-canvas');
+  const ctx = c.getContext('2d');
+  let W, H, pts = [];
 
-  function resizeCanvas(){
-    dpr = window.devicePixelRatio || 1;
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(dpr, dpr);
+  function resize() {
+    W = c.width = window.innerWidth;
+    H = c.height = window.innerHeight;
+    c.style.width = W + 'px';
+    c.style.height = H + 'px';
   }
 
-  // Moving Orbs (big color glows)
-  function createOrbs(){
-    return [
-      {x:width*.3, y:height*.2, r:width*.28, clr:['#6046a8', '#7c5af899'], dx:0.11,dy:0.09,t:Math.random()*999 },
-      {x:width*.78, y:height*.66, r:width*.22, clr:['#f02d6482', '#fcd1e300'], dx:-.07,dy:-.042,t:Math.random()*999 },
-      {x:width*.12, y:height*.82, r:width*.15, clr:['#4a6ec880','#b0a8cc00'], dx:.09, dy:-.06, t:Math.random()*999}
-    ];
-  }
-  // Floating Particles (small lights)
-  function createParticles(){
-    const arr=[];
-    for(let i=0;i<32;i++){
-      arr.push({
-        x:Math.random()*width,
-        y:Math.random()*height,
-        r:1.4+2.2*Math.random(),
-        dx: (0.25+0.55*Math.random()) * (Math.random()<.5?1:-1),
-        dy: (0.21+0.5*Math.random()) * (Math.random()<.5?1:-1),
-        alpha: 0.25+0.55*Math.random(),
-        hue: 260+Math.random()*90,
-        sat: 45+Math.random()*45
+  function init() {
+    pts = [];
+    for (let i = 0; i < 18; i++) {
+      pts.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - .5) * .18,
+        vy: (Math.random() - .5) * .18,
+        r: 60 + Math.random() * 120,
+        a: 0.015 + Math.random() * 0.025
       });
     }
-    return arr;
   }
 
-  function drawOrbs(now){
-    for(const o of orbs){
-      // Move orbs gently
-      o.x += Math.sin(now/2600+o.t)*o.dx;
-      o.y += Math.cos(now/1800+o.t)*o.dy;
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, W, H);
 
-      // Gradient
-      const g = ctx.createRadialGradient(o.x, o.y, o.r*0.18, o.x, o.y, o.r);
-      g.addColorStop(0, o.clr[0]);
-      g.addColorStop(1, o.clr[1]);
-      ctx.globalAlpha=.88;
+    for (const p of pts) {
+      const px = p.x + Math.sin(t / 4000 + p.r) * 18;
+      const py = p.y + Math.cos(t / 3500 + p.r) * 14;
+      const g = ctx.createRadialGradient(px, py, 0, px, py, p.r);
+      g.addColorStop(0, `rgba(255,255,255,${p.a})`);
+      g.addColorStop(1, 'rgba(255,255,255,0)');
       ctx.beginPath();
-      ctx.arc(o.x, o.y, o.r, 0, Math.PI*2);
-      ctx.closePath();
+      ctx.arc(px, py, p.r, 0, Math.PI * 2);
       ctx.fillStyle = g;
       ctx.fill();
+
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -p.r) p.x = W + p.r;
+      if (p.x > W + p.r) p.x = -p.r;
+      if (p.y < -p.r) p.y = H + p.r;
+      if (p.y > H + p.r) p.y = -p.r;
     }
-    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
   }
 
-  function drawParticles(){
-    for(const p of particles){
-      ctx.save();
-      ctx.globalAlpha = p.alpha;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.closePath();
-      ctx.fillStyle = `hsl(${p.hue},${p.sat}%,78%)`;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = "#caadff";
-      ctx.fill();
-      ctx.restore();
-    }
-    ctx.globalAlpha=1;
-  }
-
-  function animate(now){
-    ctx.clearRect(0,0,width,height);
-    drawOrbs(now);
-    drawParticles();
-    // Animate particles
-    for(const p of particles){
-      p.x+=p.dx;
-      p.y+=p.dy;
-      if(p.x<-70) p.x=width+20;
-      if(p.x>width+70) p.x=-12;
-      if(p.y<-30) p.y=height+10;
-      if(p.y>height+30) p.y=-6;
-    }
-    requestAnimationFrame(animate);
-  }
-  function setup(){
-    resizeCanvas();
-    orbs = createOrbs();
-    particles = createParticles();
-    requestAnimationFrame(animate);
-  }
-  window.addEventListener('resize', setup, {passive:true});
-  setup();
+  resize(); init(); requestAnimationFrame(draw);
+  window.addEventListener('resize', () => { resize(); init(); }, { passive: true });
 })();
 </script>
 
